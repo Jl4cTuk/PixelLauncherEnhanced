@@ -77,6 +77,20 @@
             android:title="@string/toggle_hidden_app_visibility_title"
             app:iconSpaceReserved="false" />
 
+        <com.drdisagree.pixellauncherenhanced.ui.preferences.SwitchPreference
+            android:defaultValue="false"
+            android:key="xposed_popuphideapp"
+            android:summary="@string/popup_hide_app_desc"
+            android:title="@string/popup_hide_app_title"
+            app:iconSpaceReserved="false" />
+
+        <com.drdisagree.pixellauncherenhanced.ui.preferences.SwitchPreference
+            android:defaultValue="false"
+            android:key="xposed_autohidehomeapps"
+            android:summary="@string/auto_hide_home_apps_desc"
+            android:title="@string/auto_hide_home_apps_title"
+            app:iconSpaceReserved="false" />
+
     </com.drdisagree.pixellauncherenhanced.ui.preferences.PreferenceCategory>
 
     <com.drdisagree.pixellauncherenhanced.ui.preferences.PreferenceCategory

@@ -15,7 +15,9 @@ import android.widget.TextView
 import android.widget.Toast
 import com.drdisagree.pixellauncherenhanced.BuildConfig
 import com.drdisagree.pixellauncherenhanced.R
+import com.drdisagree.pixellauncherenhanced.data.common.Constants.APP_BLOCK_LIST
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_EDIT_APP
+import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_HIDE_APP
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_KILL_APP
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_UNINSTALL_APP
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.RECENTS_KILL_APP
@@ -51,12 +53,15 @@ class AppShortcuts(context: Context) : ModPack(context) {
         KILL(R.drawable.ic_kill_app, R.string.kill_app),
         UNINSTALL(R.drawable.ic_uninstall, R.string.uninstall_app),
         LOCK(R.drawable.ic_lock, R.string.lock_app),
-        UNLOCK(R.drawable.ic_lock_open, R.string.unlock_app)
+        UNLOCK(R.drawable.ic_lock_open, R.string.unlock_app),
+        HIDE(R.drawable.ic_section_hide_apps, R.string.hide_from_drawer),
+        UNHIDE(R.drawable.ic_visibility, R.string.show_in_drawer)
     }
 
     private var popupEditApp = false
     private var popupKillApp = false
     private var popupUninstallApp = false
+    private var popupHideApp = false
     private var recentsKillApp = false
     private var recentsUninstallApp = false
     private var recentsLockApp = false
@@ -71,6 +76,7 @@ class AppShortcuts(context: Context) : ModPack(context) {
             popupEditApp = getBoolean(POPUP_EDIT_APP, false)
             popupKillApp = getBoolean(POPUP_KILL_APP, false)
             popupUninstallApp = getBoolean(POPUP_UNINSTALL_APP, false)
+            popupHideApp = getBoolean(POPUP_HIDE_APP, false)
             recentsKillApp = getBoolean(RECENTS_KILL_APP, false)
             recentsUninstallApp = getBoolean(RECENTS_UNINSTALL_APP, false)
             recentsLockApp = getBoolean(RECENTS_LOCK_APP, false)
@@ -155,13 +161,17 @@ class AppShortcuts(context: Context) : ModPack(context) {
             suppressError = true
         ) ?: return
 
-        listOf(Action.EDIT, Action.KILL, Action.UNINSTALL).forEach { action ->
+        listOf(Action.EDIT, Action.KILL, Action.UNINSTALL, Action.HIDE).forEach { action ->
             popupFactories[action] = Proxy.newProxyInstance(
                 factoryClass.classLoader,
                 arrayOf(factoryClass)
             ) { proxy, method, args ->
                 when (method.name) {
-                    "getShortcut" -> createShortcut(action, args.orEmpty())
+                    "getShortcut" -> {
+                        val shortcutArgs = args.orEmpty()
+                        createShortcut(if (action == Action.HIDE) hideAction(shortcutArgs) else action, shortcutArgs)
+                    }
+
                     "equals" -> proxy === args?.getOrNull(0)
                     "hashCode" -> System.identityHashCode(proxy)
                     "toString" -> "PixelLauncherEnhanced${action.name}ShortcutFactory"
@@ -188,6 +198,7 @@ class AppShortcuts(context: Context) : ModPack(context) {
                     if (popupEditApp) add(popupFactories[Action.EDIT])
                     if (popupKillApp) add(popupFactories[Action.KILL])
                     if (popupUninstallApp) add(popupFactories[Action.UNINSTALL])
+                    if (popupHideApp && HideApps.HIDE_APPS_ENABLED) add(popupFactories[Action.HIDE])
                 }.filterNotNull()
 
                 if (added.isNotEmpty()) {
@@ -236,6 +247,10 @@ class AppShortcuts(context: Context) : ModPack(context) {
         return if (locked) Action.UNLOCK else Action.LOCK
     }
 
+    private fun hideAction(args: Array<out Any?>): Action {
+        return if (HideApps.isBlocked(args.itemInfo().packageName())) Action.UNHIDE else Action.HIDE
+    }
+
     private fun createShortcut(action: Action, args: Array<out Any?>): Any? {
         val constructor = appInfoShortcutConstructor ?: return null
         val itemInfo = args.itemInfo() ?: return null
@@ -246,6 +261,7 @@ class AppShortcuts(context: Context) : ModPack(context) {
         if (action == Action.UNINSTALL && !isUninstallable(packageName, itemInfo.user())) {
             return null
         }
+        if ((action == Action.HIDE || action == Action.UNHIDE) && !itemInfo.isDrawerApp()) return null
 
         val constructorArgs = constructor.parameterTypes.map { type ->
             args.firstOrNull { type.isInstance(it) } ?: when (type) {
@@ -344,6 +360,24 @@ class AppShortcuts(context: Context) : ModPack(context) {
                 ).show()
             }
 
+            Action.HIDE, Action.UNHIDE -> {
+                val hidden = action == Action.HIDE
+                val blockList = Xprefs.getStringSet(APP_BLOCK_LIST, emptySet()).orEmpty().toMutableSet()
+                if (hidden) blockList.add(packageName) else blockList.remove(packageName)
+                runCatching { Xprefs.edit().putStringSet(APP_BLOCK_LIST, blockList).apply() }
+                    .onFailure { log(this@AppShortcuts, it) }
+
+                val label = itemInfo.getFieldSilently("title") as? CharSequence ?: packageName
+                Toast.makeText(
+                    context,
+                    modRes.getString(
+                        if (hidden) R.string.app_hidden_from_drawer else R.string.app_shown_in_drawer,
+                        label
+                    ),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+
             Action.UNINSTALL -> {
                 runCatching {
                     context.startActivity(
@@ -399,6 +433,12 @@ class AppShortcuts(context: Context) : ModPack(context) {
 
             else -> null
         }
+    }
+
+    private fun Any?.isDrawerApp(): Boolean {
+        if (getFieldSilently("itemType") != ITEM_TYPE_APPLICATION) return false
+        val container = getFieldSilently("container") as? Int ?: return false
+        return container < 0 && container !in HOME_CONTAINERS
     }
 
     private fun UserHandle.userId(): Int {

@@ -254,6 +254,14 @@
     <string name="hide_apps_title">Hide apps from app drawer</string>
     <string name="search_hidden_apps_title">Allow searching for hidden apps</string>
     <string name="toggle_hidden_app_visibility_title">Toggle hidden app visibility from homescreen popup</string>
+    <string name="popup_hide_app_title">Hide option in app menu</string>
+    <string name="popup_hide_app_desc">Add a Hide from drawer option to the long press menu of apps in the app drawer</string>
+    <string name="auto_hide_home_apps_title">Auto-hide apps on home screen</string>
+    <string name="auto_hide_home_apps_desc">Hide apps from the app drawer while they are on the home screen, in the dock or in a home screen folder</string>
+    <string name="hide_from_drawer">Hide from drawer</string>
+    <string name="show_in_drawer">Show in drawer</string>
+    <string name="app_hidden_from_drawer">%1$s hidden from app drawer</string>
+    <string name="app_shown_in_drawer">%1$s shown in app drawer</string>
     <string name="section_general_title">General</string>
     <string name="section_icon_colors_title">Icon colors</string>
     <string name="section_interface_title">Interface</string>

@@ -9,6 +9,7 @@ import androidx.preference.PreferenceGroup
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.APP_DRAWER_ICON_LABELS
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.APP_DRAWER_LONG_LABELS
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.APP_DRAWER_THEMED_ICONS
+import com.drdisagree.pixellauncherenhanced.data.common.Constants.AUTO_HIDE_HOME_APPS
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.DOCK_SEARCH_BAR_ABOVE
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.FORCE_THEMED_ICONS
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.HOME_THEMED_ICONS
@@ -58,6 +59,7 @@ import com.drdisagree.pixellauncherenhanced.data.common.Constants.NO_DRAWER_MODE
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.NO_DRAWER_SWIPE_ACTION
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.RECENTS_CLEAR_ALL_BUTTON
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_EDIT_APP
+import com.drdisagree.pixellauncherenhanced.data.common.Constants.POPUP_HIDE_APP
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.RECENTS_DISABLE_SELECTION
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.RECENTS_MEMINFO
 import com.drdisagree.pixellauncherenhanced.data.common.Constants.RECENTS_MEMINFO_CHIP
@@ -181,7 +183,10 @@ object PrefsHelper {
 
             LAUNCHER_DARK_PAGE_INDICATOR -> !getBoolean(LAUNCHER_HIDE_PAGE_INDICATOR)
 
-            SEARCH_HIDDEN_APPS -> getBoolean(HIDE_APPS_FROM_APP_DRAWER)
+            SEARCH_HIDDEN_APPS,
+            POPUP_HIDE_APP -> getBoolean(HIDE_APPS_FROM_APP_DRAWER)
+
+            AUTO_HIDE_HOME_APPS -> !getBoolean(NO_DRAWER_MODE)
 
             APP_DRAWER_LONG_LABELS -> getBoolean(APP_DRAWER_ICON_LABELS, true)
 
