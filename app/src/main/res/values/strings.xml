@@ -136,6 +136,8 @@
     <string name="app_drawer_icon_labels_title">Icon labels in app drawer</string>
     <string name="app_drawer_long_labels_title">Show long app names</string>
     <string name="app_drawer_long_labels_desc">Use two lines for app names in app drawer</string>
+    <string name="center_drawer_last_row_title">Center last row</string>
+    <string name="center_drawer_last_row_desc">Center the apps in the last row of the app drawer when it is not full</string>
     <string name="hide_drawer_scrollbar_title">Hide scrollbar</string>
     <string name="hide_drawer_scrollbar_desc">Hide the fast scroll bar on the edge of the app drawer</string>
     <string name="hide_drawer_handle_title">Hide drag handle</string>

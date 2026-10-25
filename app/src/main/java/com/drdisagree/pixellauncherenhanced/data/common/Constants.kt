@@ -105,6 +105,7 @@ object Constants {
     const val DRAWER_SEARCH_BLUR_TINT = "xposed_drawersearchblurtint"
     const val HIDE_DRAWER_SCROLLBAR = "xposed_hidedrawerscrollbar"
     const val DRAWER_SCROLL_FADE = "xposed_drawerscrollfade"
+    const val CENTER_DRAWER_LAST_ROW = "xposed_centerdrawerlastrow"
     const val HIDE_DRAWER_HANDLE = "xposed_hidedrawerhandle"
     const val RECENTS_CLEAR_ALL_BUTTON = "xposed_recentsclearallbutton"
     const val FIXED_RECENTS_BUTTONS_WIDTH = "xposed_fixedrecentsbuttonswidth"

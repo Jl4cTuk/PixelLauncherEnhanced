@@ -19,6 +19,7 @@ import com.drdisagree.pixellauncherenhanced.xposed.mods.WidgetResize
 import com.drdisagree.pixellauncherenhanced.xposed.mods.ClearAllButton
 import com.drdisagree.pixellauncherenhanced.xposed.mods.PageIndicator
 import com.drdisagree.pixellauncherenhanced.xposed.mods.DarkStatusbar
+import com.drdisagree.pixellauncherenhanced.xposed.mods.DrawerLastRowCenter
 import com.drdisagree.pixellauncherenhanced.xposed.mods.DrawerScrollFade
 import com.drdisagree.pixellauncherenhanced.xposed.mods.DrawerHandle
 import com.drdisagree.pixellauncherenhanced.xposed.mods.DrawerScrollbar
@@ -78,6 +79,7 @@ object EntryList {
         DrawerScrollbar::class.java,
         DrawerHandle::class.java,
         DrawerScrollFade::class.java,
+        DrawerLastRowCenter::class.java,
         ClearAllButton::class.java,
         RecentsMemInfo::class.java,
         RecentsAppLock::class.java,

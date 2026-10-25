@@ -53,6 +53,13 @@
             android:title="@string/app_drawer_long_labels_title"
             app:iconSpaceReserved="false" />
 
+        <com.drdisagree.pixellauncherenhanced.ui.preferences.SwitchPreference
+            android:defaultValue="false"
+            android:key="xposed_centerdrawerlastrow"
+            android:summary="@string/center_drawer_last_row_desc"
+            android:title="@string/center_drawer_last_row_title"
+            app:iconSpaceReserved="false" />
+
     </com.drdisagree.pixellauncherenhanced.ui.preferences.PreferenceCategory>
 
     <com.drdisagree.pixellauncherenhanced.ui.preferences.PreferenceCategory
